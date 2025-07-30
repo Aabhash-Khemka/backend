@@ -9,8 +9,10 @@ import fs from "fs"
       }) 
       console.log("File is Uploaded on Cloudinary ",response.url) ;
       return response
+
+      
     } catch (error) {
-        fs.unlinkSync(localFilePath) // remova the locally saved temp file as the upload operation gets failed 
+        fs.unlinkSync(localFilePath) // remove the locally saved temp file as the upload operation gets failed 
     }
   }
 
