@@ -11,13 +11,11 @@ const generateAccessAndRefreshToken = async(userId) =>{
    const refreshToken = user.generateRefreshToken()
 
    user.refreshToken = refreshToken
-   user.save({validateBeforeSave:false})
+   await user.save({validateBeforeSave:false})
 
   return {accessToken,refreshToken}
-
-
-
   } catch (error) {
+    console.log(error);
     throw new ApiError(500,"Something went wrong while generating refresh and access token")
   }
 }
@@ -138,7 +136,7 @@ const loginUser = asyncHandler(async (req,res) => {
 
    const {accessToken,refreshToken} = await generateAccessAndRefreshToken(user._id)
 
-   const loggedInUser = User.findById(user._id).select("-password -refreshToken")
+   const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
    const options = {
     httpOnly:true,
@@ -157,7 +155,7 @@ const loginUser = asyncHandler(async (req,res) => {
 })
 
 const logoutUser = asyncHandler(async (req,res) => {
-   User.findByIdAndUpdate(
+  await  User.findByIdAndUpdate(
     req.user._id,{
       $set:{
         refreshToken:undefined
